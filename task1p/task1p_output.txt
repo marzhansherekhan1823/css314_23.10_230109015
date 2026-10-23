@@ -1,0 +1,17 @@
+﻿Student ID            : 230109015
+OS / Platform         : Windows-11-10.0.26200-SP0
+Logical core count    : 20
+Physical cores used   : 14
+Python / NumPy        : 3.14.0 / 2.4.2
+Matrix                : 8,000 x 8,000 float64 (512 MB), row-major layout
+Row stride            : 64,000 bytes between vertically adjacent elements
+Repeats               : 5 per mode (median reported)
+Reference sum         : 31999478.096794
+
+--------------------------------------------------------------
+Mode A (row-major, contiguous)   :      48.69 ms   sum = 31999478.096794
+Mode B (column-major, strided)   :     120.08 ms   sum = 31999478.096794
+--------------------------------------------------------------
+Cache penalty factor (B / A)     :       2.47 x
+--------------------------------------------------------------
+Correctness: both modes match reference (rel. error A=2.3e-16, B=1.2e-16) -> PASS
