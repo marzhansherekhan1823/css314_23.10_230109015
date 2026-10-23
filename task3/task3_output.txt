@@ -1,0 +1,17 @@
+﻿Student ID        : 230109015
+OS                : Windows 11 10.0 (amd64)
+Java              : 17.0.10
+Logical cores     : 20
+Threads used (N)  : 14 (physical cores)
+Increments/thread : 50а000а000
+
+--------------------------------------------------------
+Variant                        |    Wall Time | vs Unpadded
+--------------------------------------------------------
+Unpadded shared (false share)  |    251,06 ms |     1,00x
+Padded shared (64B stride)     |    129,72 ms |     1,94x
+Local variable, write once     |     24,66 ms |    10,18x
+--------------------------------------------------------
+Execution ratio Unpadded / Padded : 1,94x
+Execution ratio Unpadded / Local  : 10,18x
+Counter check (all == 50,000,000) : PASS
