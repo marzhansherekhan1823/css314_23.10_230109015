@@ -1,0 +1,5 @@
+﻿seed=42 dtype=int64 cpu_count=20
+N | bytes(MB) | Path A pickle/pipe (ms) | Path B shm total (ms) | Path B attach-only (ms) | A/B ratio | Check
+100,000 | 0.8 | 1.154 | 0.180 | 0.079 | 6.4x (total) / 15x (attach) | PASS (child received correct data)
+1,000,000 | 8.0 | 9.502 | 0.280 | 0.054 | 34.0x (total) / 175x (attach) | PASS (child received correct data)
+10,000,000 | 80.0 | 127.868 | 5.127 | 0.090 | 24.9x (total) / 1426x (attach) | PASS (child received correct data)
