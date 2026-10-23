@@ -1,0 +1,32 @@
+﻿Student ID       : 230109015
+OS               : Windows 11 10.0 (amd64)
+Java             : 17.0.10
+Logical cores    : 20
+Threads          : 4 x 2а000а000 increments
+Expected final   : 8а000а000
+
+PART 1 - UNSYNCHRONIZED (race condition), 5 trials
+------------------------------------------------------------------
+Trial |     Expected |       Actual |         Lost |     Lost %
+------------------------------------------------------------------
+    1 |    8а000а000 |    7а947а485 |       52а515 |    0,6564%
+    2 |    8а000а000 |    2а387а513 |    5а612а487 |   70,1561%
+    3 |    8а000а000 |    2а546а348 |    5а453а652 |   68,1707%
+    4 |    8а000а000 |    2а251а621 |    5а748а379 |   71,8547%
+    5 |    8а000а000 |    2а354а174 |    5а645а826 |   70,5728%
+------------------------------------------------------------------
+Average actual value : 3а497а428   |   Average lost updates : 4а502а572 (56,2821%)
+Worst trial          : 5а748а379 updates lost (71,8547%)
+
+PART 2 - SYNCHRONIZED VERSIONS (median wall-clock of 5 trials)
+------------------------------------------------------------------
+Variant                    |  Time (ms) | vs unsafe | Final value
+------------------------------------------------------------------
+Unsafe (no sync)           |       0,69 |     1,00x | WRONG (see above)
+ReentrantLock (mutex)      |     165,99 |   240,32x | 8а000а000 (correct)
+AtomicInteger (HW atomic)  |      94,89 |   137,38x | 8а000а000 (correct)
+------------------------------------------------------------------
+
+Synchronization penalty (lock vs unsafe)   : +165,30 ms  (240,32x slower)
+Synchronization penalty (atomic vs unsafe) : +94,19 ms  (137,38x slower)
+Atomic vs lock                             : atomic is 1,75x faster than lock
