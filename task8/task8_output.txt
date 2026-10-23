@@ -1,0 +1,28 @@
+﻿Student ID    : 230109015
+OS            : Windows 11 10.0 (amd64)
+Java          : 17.0.10
+Logical cores : 20
+Matrix size   : 1024 x 1024 float64  (8 MB per matrix)
+Work          : 2*n^3 = 2.147 GFLOP per multiply
+Repeats       : median of 3 runs per cell
+GPU path      : skipped (CPU parallel path chosen)
+
+----------------------------------------------------------------------------------------------------------------------
+Variant                  |  Work set | 1 thr (ms) |  GFLOP/s | 20 thr (ms) |  GFLOP/s | MT speedup | 1T vs naive | Est. stall ns/FMA (1T)
+----------------------------------------------------------------------------------------------------------------------
+Non-tiled i-j-k          |      8 MB |     2269.6 |     0.95 |      295.5 |     7.27 |      7.68x |       1.00x | 1.653
+Non-tiled i-k-j (bonus)  |      8 MB |      502.4 |     4.27 |       75.6 |    28.40 |      6.64x |       4.52x | 0.007
+Tiled 16x16              |      6 KB |      625.7 |     3.43 |      133.6 |    16.07 |      4.68x |       3.63x | 0.122
+Tiled 64x64              |     96 KB |      494.4 |     4.34 |       88.8 |    24.18 |      5.57x |       4.59x | 0.000
+----------------------------------------------------------------------------------------------------------------------
+
+ANALYSIS
+Correctness           : max |C - C_reference| over all runs = 0.000e+00 (PASS)
+Fastest single-thread : Tiled 64x64 (494.4 ms)
+Fastest multi-thread  : Non-tiled i-k-j (bonus) (75.6 ms on 20 threads)
+Tiling benefit        : naive i-j-k is 4.59x slower than Tiled 64x64 single-threaded
+Loop order alone      : i-k-j (no tiling) is 1.02x slower than Tiled 64x64 single-threaded
+Tile size effect      : 16x16 = 625.7 ms vs 64x64 = 494.4 ms (single-thread), 16x16 fits L1 (6 KB), 64x64 needs L2 (96 KB)
+Cache-miss note       : the naive i-j-k loop strides 8 KB through B on every inner step, so each B access
+                        lands on a different cache line (and page). The stall column is an ESTIMATE from
+                        runtime differences, not a hardware miss counter.
