@@ -1,0 +1,4 @@
+﻿N=2000000 seed=42 threads=20 hw_cores=20
+Serial Time (ms) | Parallel Time (ms) | Speedup | Verification Status
+1,167 | 1,999 | 0,58x | PASS
+serial_last=11004131 parallel_last=11004131
