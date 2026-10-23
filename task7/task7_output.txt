@@ -1,0 +1,40 @@
+﻿Student ID      : 230109015
+OS / Platform   : Windows-11-10.0.26200-SP0
+Logical cores   : 20
+Python / NumPy  : 3.14.0 / 2.4.2
+Array size      : 30,000,000 float64 (240 MB per array, 2 arrays)
+Core counts     : [1, 2, 4, 8, 20]  (required: 1, 2, max=20; extra points added)
+Repeats         : kernel A x7, kernel B x3 (median)
+
+KERNEL A - Memory-bound: B[i] = A[i]
+------------------------------------------------------------
+ Cores |  Time (ms) |  Speedup | Efficiency | Eff. BW (GB/s)
+------------------------------------------------------------
+     1 |      14.61 |    1.00x |     100.0% |          32.85
+     2 |       9.41 |    1.55x |      77.6% |          51.00
+     4 |       8.51 |    1.72x |      42.9% |          56.42
+     8 |       8.47 |    1.72x |      21.6% |          56.66
+    20 |       8.34 |    1.75x |       8.8% |          57.58
+------------------------------------------------------------
+
+KERNEL B - Compute-bound: B[i] = sin(A[i])*cos(A[i]) + tan(A[i])
+------------------------------------------------------------
+ Cores |  Time (ms) |  Speedup | Efficiency | Eff. BW (GB/s)
+------------------------------------------------------------
+     1 |     438.15 |    1.00x |     100.0% |           1.10
+     2 |     233.45 |    1.88x |      93.8% |           2.06
+     4 |     134.87 |    3.25x |      81.2% |           3.56
+     8 |      97.76 |    4.48x |      56.0% |           4.91
+    20 |      80.66 |    5.43x |      27.2% |           5.95
+------------------------------------------------------------
+
+==========================================================================
+VERDICT
+Kernel A (copy)       : efficiency at 20 cores = 8.8%, gain from previous core count = 1.02x
+Kernel B (sin/cos/tan): efficiency at 20 cores = 27.2%, gain from previous core count = 1.21x
+Kernel A peak effective bandwidth: 57.58 GB/s (reached at 20 cores)
+
+>>> BOTH kernels stalled; Kernel A stalled harder
+    (check SMT/thermal limits for kernel B; kernel A is the memory-channel-saturated one).
+(stall criterion: efficiency at max cores < 50% AND gain from previous core count < 1.25x)
+==========================================================================
