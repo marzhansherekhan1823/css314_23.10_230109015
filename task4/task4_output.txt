@@ -1,0 +1,43 @@
+﻿Student ID    : 230109015
+OS / Platform : Windows-11-10.0.26200-SP0
+Logical cores : 20
+Python        : 3.14.0
+Items         : 1000  |  Workers: 4  |  Repeats: 3 (median by total time)
+Cost model    : sleep(0.0001 * (i % 20)) per item
+
+=== Workload: REQUIRED  cost = 0.0001 * (i % 20) ===
+Total modeled work : 950.0 ms  |  ideal per worker (work/4): 237.5 ms
+Static block loads : 232.5 ms, 242.5 ms, 232.5 ms, 242.5 ms
+-------------------------------------------------------------------------------------------
+Strategy                   | Total (ms) | First done |  Last done | Delta (ms) | Efficiency
+-------------------------------------------------------------------------------------------
+A  Static (equal blocks)   |     368.40 |     352.08 |     368.40 |      16.32 |      64.5%
+B1 Dynamic, chunk=1        |     359.66 |     357.31 |     359.66 |       2.36 |      66.0%
+B5 Dynamic, chunk=5        |     366.55 |     357.11 |     366.55 |       9.43 |      64.8%
+C  Work stealing, chunk=5  |     327.14 |     317.64 |     327.14 |       9.50 |      72.6%
+-------------------------------------------------------------------------------------------
+  A  Static (equal blocks)   per-worker finish (ms): 358.2, 363.9, 352.1, 368.4
+  B1 Dynamic, chunk=1        per-worker finish (ms): 359.7, 357.3, 359.1, 357.9
+  B5 Dynamic, chunk=5        per-worker finish (ms): 359.1, 357.1, 366.5, 363.7
+  C  Work stealing, chunk=5  per-worker finish (ms): 317.6, 326.7, 319.1, 327.1  (steals: 0)
+  Speedup vs static: B1=1.02x, B5=1.01x, C=1.13x
+
+=== Workload: BONUS     cost = 0.0002 * (i // 50)  [ramp / heavy tail] ===
+Total modeled work : 1900.0 ms  |  ideal per worker (work/4): 475.0 ms
+Static block loads : 100.0 ms, 350.0 ms, 600.0 ms, 850.0 ms
+-------------------------------------------------------------------------------------------
+Strategy                   | Total (ms) | First done |  Last done | Delta (ms) | Efficiency
+-------------------------------------------------------------------------------------------
+A  Static (equal blocks)   |     963.69 |     179.31 |     963.69 |     784.38 |      49.3%
+B1 Dynamic, chunk=1        |     580.74 |     578.43 |     580.74 |       2.31 |      81.8%
+B5 Dynamic, chunk=5        |     598.42 |     589.52 |     598.42 |       8.89 |      79.4%
+C  Work stealing, chunk=5  |     595.45 |     579.06 |     595.45 |      16.39 |      79.8%
+-------------------------------------------------------------------------------------------
+  A  Static (equal blocks)   per-worker finish (ms): 179.3, 463.7, 705.6, 963.7
+  B1 Dynamic, chunk=1        per-worker finish (ms): 578.4, 580.7, 580.6, 580.7
+  B5 Dynamic, chunk=5        per-worker finish (ms): 589.6, 598.4, 598.3, 589.5
+  C  Work stealing, chunk=5  per-worker finish (ms): 579.1, 593.8, 580.2, 595.4  (steals: 47)
+  Speedup vs static: B1=1.66x, B5=1.61x, C=1.62x
+
+Note: time.sleep has OS timer granularity (~0.1-1+ ms on Windows), so measured
+times exceed the modeled ideal; Efficiency = ideal / measured total.
